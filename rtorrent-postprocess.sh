@@ -1,8 +1,14 @@
 #!/bin/sh -xu
 
 # Input Parameters
-ARG_PATH="$1"
-ARG_NAME="$2"
+TR_TORRENT_DIR="$1"
+TR_TORRENT_NAME="$2"
+
+PATH_REPLACE="/downloads/"
+PATH_REPLACE_WITH="/downloads/rtorrent/"
+
+ARG_PATH=$(echo "${TR_TORRENT_DIR/"$PATH_REPLACE"/"$PATH_REPLACE_WITH"}/$TR_TORRENT_NAME")
+ARG_NAME="$TR_TORRENT_NAME"
 ARG_LABEL="$3"
 
 # Configuration
@@ -22,20 +28,20 @@ LIDARR_CATEGORY=${LIDARR_CATEGORY:-"lidarr"}
 LIDARR_PORT=${LIDARR_PORT:-""}
 LIDARR_API_KEY=${LIDARR_API_KEY:-""}
 
-# FILEBOT_LABEL=$ARG_LABEL
-# case $TR_TORRENT_DIR in
-#     *$SONARR_CATEGORY*)
-#         FILEBOT_LABEL="tv"
-#     ;;
+FILEBOT_LABEL=$ARG_LABEL
+case $TR_TORRENT_DIR in
+    *$SONARR_CATEGORY*)
+        FILEBOT_LABEL="tv"
+    ;;
 
-#     *$RADARR_CATEGORY*)
-#         FILEBOT_LABEL="movie"
-#     ;;
+    *$RADARR_CATEGORY*)
+        FILEBOT_LABEL="movie"
+    ;;
 
-#     *$LIDARR_CATEGORY*)
-#         FILEBOT_LABEL="music"
-#     ;;
-# esac
+    *$LIDARR_CATEGORY*)
+        FILEBOT_LABEL="music"
+    ;;
+esac
 
 set | grep \
         -e ARG_PATH \
@@ -69,39 +75,39 @@ echo curl \
 echo $FILEBOT_CMD >> /data/filebot.log
 eval $FILEBOT_CMD
 
-# REFRESH_NAME=""
-# REFRESH_URL=""
+REFRESH_NAME=""
+REFRESH_URL=""
 
-# case $TR_TORRENT_DIR in
-#     *$SONARR_CATEGORY*)
-#         if [ $SONARR_PORT != "" ] && [ $SONARR_API_KEY != "" ]; then
-#             REFRESH_NAME="RescanSeries"
-#             REFRESH_URL="http://sonarr:${SONARR_PORT}/api/command?apikey=${SONARR_API_KEY}"
-#         fi
-#     ;;
+case $TR_TORRENT_DIR in
+    *$SONARR_CATEGORY*)
+        if [ $SONARR_PORT != "" ] && [ $SONARR_API_KEY != "" ]; then
+            REFRESH_NAME="RescanSeries"
+            REFRESH_URL="http://sonarr:${SONARR_PORT}/api/command?apikey=${SONARR_API_KEY}"
+        fi
+    ;;
 
-#     *$RADARR_CATEGORY*)
-#         if [ $RADARR_PORT != "" ] && [ $RADARR_API_KEY != "" ]; then
-#             REFRESH_NAME="RescanMovie"
-#             REFRESH_URL="http://radarr:${RADARR_PORT}/api/command?apikey=${RADARR_API_KEY}"
-#         fi
-#     ;;
+    *$RADARR_CATEGORY*)
+        if [ $RADARR_PORT != "" ] && [ $RADARR_API_KEY != "" ]; then
+            REFRESH_NAME="RescanMovie"
+            REFRESH_URL="http://radarr:${RADARR_PORT}/api/command?apikey=${RADARR_API_KEY}"
+        fi
+    ;;
 
-#     *$LIDARR_CATEGORY*)
-#         if [ $LIDARR_PORT != "" ] && [ $LIDARR_API_KEY != "" ]; then
-#             REFRESH_NAME="RescanArtist"
-#             REFRESH_URL="http://lidarr:${LIDARR_PORT}/api/v1/command?apikey=${LIDARR_API_KEY}"
-#         fi
-#     ;;
-# esac
+    *$LIDARR_CATEGORY*)
+        if [ $LIDARR_PORT != "" ] && [ $LIDARR_API_KEY != "" ]; then
+            REFRESH_NAME="RescanArtist"
+            REFRESH_URL="http://lidarr:${LIDARR_PORT}/api/v1/command?apikey=${LIDARR_API_KEY}"
+        fi
+    ;;
+esac
 
-# if [ $REFRESH_URL != "" ]; then
-#     REFRESH_CMD=$(\
-#         echo curl \
-#             -d \"{\\\"name\\\":\\\"${REFRESH_NAME}\\\"}\" \
-#             -H \"Content-Type: application/json\" \
-#       -X POST \
-#             ${REFRESH_URL})
-#     echo $REFRESH_CMD >> /data/pvr-refresh.log
-#     eval $REFRESH_CMD
-# fi
+if [ $REFRESH_URL != "" ]; then
+    REFRESH_CMD=$(\
+        echo curl \
+            -d \"{\\\"name\\\":\\\"${REFRESH_NAME}\\\"}\" \
+            -H \"Content-Type: application/json\" \
+      -X POST \
+            ${REFRESH_URL})
+    echo $REFRESH_CMD >> /data/pvr-refresh.log
+    eval $REFRESH_CMD
+fi

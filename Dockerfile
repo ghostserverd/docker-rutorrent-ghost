@@ -1,4 +1,4 @@
-FROM linuxserver/rutorrent
+FROM crazymax/rtorrent-rutorrent
 
 # add ghost config file
 COPY root/ /

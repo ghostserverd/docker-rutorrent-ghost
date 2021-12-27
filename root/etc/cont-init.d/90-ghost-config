@@ -17,7 +17,7 @@ cat <<"EOF"
 EOF
 
 # take control of permissions
-chown -R abc:abc \
+chown -R rtorrent:rtorrent \
 	/config \
 	/downloads \
         /usr/local/bin

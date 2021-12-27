@@ -54,7 +54,7 @@ set | grep \
         -e LIDARR_PORT \
         -e LIDARR_API_KEY \
         -e IGNORE_LABELS \
-        >> /config/rutorrent_env.log
+        >> /data/rutorrent_env.log
 
 # exit with success if label should not be processed by filebot
 [ ! -z "$IGNORE_LABELS" ] && case $FILEBOT_LABEL in $IGNORE_LABELS) exit 0;; esac
@@ -66,7 +66,7 @@ echo curl \
     --data-urlencode label=\"${FILEBOT_LABEL}\" \
     http://filebot:${FILEBOT_PORT}/amc)
 
-echo $FILEBOT_CMD >> /config/filebot.log
+echo $FILEBOT_CMD >> /data/filebot.log
 eval $FILEBOT_CMD
 
 # REFRESH_NAME=""
@@ -102,6 +102,6 @@ eval $FILEBOT_CMD
 #             -H \"Content-Type: application/json\" \
 #       -X POST \
 #             ${REFRESH_URL})
-#     echo $REFRESH_CMD >> /config/pvr-refresh.log
+#     echo $REFRESH_CMD >> /data/pvr-refresh.log
 #     eval $REFRESH_CMD
 # fi

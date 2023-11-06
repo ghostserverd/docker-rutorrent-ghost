@@ -19,5 +19,5 @@ EOF
 # take control of permissions
 chown -R rtorrent:rtorrent \
 	/data
-#	/downloads/rtorrent
-#        /usr/local/bin
+	/downloads
+#	/usr/local/bin
